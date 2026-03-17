@@ -16,6 +16,31 @@
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="bg-purple-500/20 p-4 rounded-2xl">
+                        <i class="fa-solid fa-clock text-purple-500 text-2xl"></i>
+                    </div>
+                    <span class="flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-purple-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                    </span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs font-semibold text-purple-400 uppercase">Japan</p>
+                        <p id="jp-time" class="text-3xl font-bold tabular-nums">00:00</p>
+                        <p id="jp-date" class="text-[10px] text-slate-400 font-mono">Loading...</p>
+                    </div>
+                    <div class="text-right border-l border-slate-700 pl-4">
+                        <p class="text-xs font-semibold text-purple-400 uppercase">Home</p>
+                        <p id="home-time" class="text-3xl font-bold tabular-nums">00:00</p>
+                        <p id="home-date" class="text-[10px] text-slate-400 font-mono">Loading...</p>
+                    </div>
+                </div>
+            </div>
             
             <a href="/journal" class="group bg-slate-800 p-8 rounded-3xl border border-slate-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2">
                 <div class="flex items-center justify-between mb-4">
@@ -44,11 +69,26 @@
                         <i class="fa-solid fa-yen-sign text-green-500 text-2xl"></i>
                     </div>
                 </div>
-                <h2 class="text-2xl font-semibold mb-2">Currency Converter</h2>
+                <h2 class="text-2xl font-semibold mb-2">Currency Tracking</h2>
                 <p class="text-slate-400 text-sm">Coming Soon: Real-time USD to JPY tracking.</p>
             </div>
 
         </div>
     </div>
+
+    <script>
+        function updateClocks() {
+            fetch('/api/time')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('jp-time').innerText = data.japan;
+                    document.getElementById('jp-date').innerText = data.japan_date;
+                    document.getElementById('home-time').innerText = data.home;
+                    document.getElementById('home-date').innerText = data.home_date;
+                });
+        }
+        setInterval(updateClocks, 60000);
+        updateClocks();
+    </script>
 </body>
 </html>
