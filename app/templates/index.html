@@ -63,7 +63,8 @@
                 <p class="text-slate-400 text-sm">Coming Soon: Flashcards and essential phrases.</p>
             </div>
 
-            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 flex flex-col">
+            <!--Disabled for now-->
+            <!-- <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 flex flex-col">
                 <div class="flex items-center justify-between mb-4">
                     <div class="bg-green-500/20 p-4 rounded-2xl">
                         <i class="fa-solid fa-yen-sign text-green-500 text-2xl"></i>
@@ -97,7 +98,7 @@
                             class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-2 pl-7 pr-3 text-slate-400 outline-none">
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     </div>
@@ -118,75 +119,76 @@
         setInterval(updateClocks, 60000);
         updateClocks();
 
-        // --- 2. CURRENCY LOGIC ---
-        let exchangeRate = 150.00; // Default until API loads
-        let isUsdToJpy = true;
+        // Disabled for now
+        // // --- 2. CURRENCY LOGIC ---
+        // let exchangeRate = 150.00; // Default until API loads
+        // let isUsdToJpy = true;
 
-        const inputTop = document.getElementById('input-top');
-        const inputBottom = document.getElementById('input-bottom');
-        const labelTop = document.getElementById('label-top');
-        const labelBottom = document.getElementById('label-bottom');
-        const swapBtn = document.getElementById('swap-btn');
+        // const inputTop = document.getElementById('input-top');
+        // const inputBottom = document.getElementById('input-bottom');
+        // const labelTop = document.getElementById('label-top');
+        // const labelBottom = document.getElementById('label-bottom');
+        // const swapBtn = document.getElementById('swap-btn');
 
-        function updateCurrency() {
-            fetch('/api/currency')
-                .then(res => res.json())
-                .then(data => {
-                    exchangeRate = data.rate;
-                    document.getElementById('current-rate').innerText = `¥${data.rate}`;
-                    renderChart(data.history);
-                });
-        }
+        // function updateCurrency() {
+        //     fetch('/api/currency')
+        //         .then(res => res.json())
+        //         .then(data => {
+        //             exchangeRate = data.rate;
+        //             document.getElementById('current-rate').innerText = `¥${data.rate}`;
+        //             renderChart(data.history);
+        //         });
+        // }
 
-        inputTop.addEventListener('input', (e) => {
-            const val = e.target.value;
-            if (isUsdToJpy) {
-                inputBottom.value = (val * exchangeRate).toFixed(0);
-            } else {
-                inputBottom.value = (val / exchangeRate).toFixed(2);
-            }
-        });
+        // inputTop.addEventListener('input', (e) => {
+        //     const val = e.target.value;
+        //     if (isUsdToJpy) {
+        //         inputBottom.value = (val * exchangeRate).toFixed(0);
+        //     } else {
+        //         inputBottom.value = (val / exchangeRate).toFixed(2);
+        //     }
+        // });
 
-        swapBtn.addEventListener('click', () => {
-            isUsdToJpy = !isUsdToJpy;
-            inputTop.value = '';
-            inputBottom.value = '';
-            if (isUsdToJpy) {
-                labelTop.innerText = '$';
-                labelBottom.innerText = '¥';
-                inputTop.placeholder = 'USD';
-            } else {
-                labelTop.innerText = '¥';
-                labelBottom.innerText = '$';
-                inputTop.placeholder = 'JPY';
-            }
-        });
+        // swapBtn.addEventListener('click', () => {
+        //     isUsdToJpy = !isUsdToJpy;
+        //     inputTop.value = '';
+        //     inputBottom.value = '';
+        //     if (isUsdToJpy) {
+        //         labelTop.innerText = '$';
+        //         labelBottom.innerText = '¥';
+        //         inputTop.placeholder = 'USD';
+        //     } else {
+        //         labelTop.innerText = '¥';
+        //         labelBottom.innerText = '$';
+        //         inputTop.placeholder = 'JPY';
+        //     }
+        // });
 
-        function renderChart(historyData) {
-            const ctx = document.getElementById('currencyChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['', '', '', '', '', '', ''],
-                    datasets: [{
-                        data: historyData,
-                        borderColor: '#22c55e',
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        fill: true,
-                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    plugins: { legend: { display: false } },
-                    scales: { x: { display: false }, y: { display: false } },
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-        }
-        updateCurrency();
+        // function renderChart(historyData) {
+        //     const ctx = document.getElementById('currencyChart').getContext('2d');
+        //     new Chart(ctx, {
+        //         type: 'line',
+        //         data: {
+        //             labels: ['', '', '', '', '', '', ''],
+        //             datasets: [{
+        //                 data: historyData,
+        //                 borderColor: '#22c55e',
+        //                 borderWidth: 2,
+        //                 pointRadius: 0,
+        //                 fill: true,
+        //                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        //                 tension: 0.4
+        //             }]
+        //         },
+        //         options: {
+        //             plugins: { legend: { display: false } },
+        //             scales: { x: { display: false }, y: { display: false } },
+        //             responsive: true,
+        //             maintainAspectRatio: false
+        //         }
+        //     });
+        // }
+        // updateCurrency();
     </script>
 </body>
 </html>
