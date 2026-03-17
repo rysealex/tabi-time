@@ -35,7 +35,7 @@
                         <p id="jp-date" class="text-[10px] text-slate-400 font-mono">Loading...</p>
                     </div>
                     <div class="text-right border-l border-slate-700 pl-4">
-                        <p class="text-xs font-semibold text-purple-400 uppercase">Home</p>
+                        <p class="text-xs font-semibold text-slate-400 uppercase">Home</p>
                         <p id="home-time" class="text-3xl font-bold tabular-nums">00:00</p>
                         <p id="home-date" class="text-[10px] text-slate-400 font-mono">Loading...</p>
                     </div>
@@ -63,20 +63,48 @@
                 <p class="text-slate-400 text-sm">Coming Soon: Flashcards and essential phrases.</p>
             </div>
 
-            <div class="bg-slate-800/50 p-8 rounded-3xl border border-slate-700 opacity-60 cursor-not-allowed">
+            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 flex flex-col">
                 <div class="flex items-center justify-between mb-4">
                     <div class="bg-green-500/20 p-4 rounded-2xl">
                         <i class="fa-solid fa-yen-sign text-green-500 text-2xl"></i>
                     </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-slate-400 uppercase font-mono">Current Rate</p>
+                        <p id="current-rate" class="text-xl font-bold text-green-400">---</p>
+                    </div>
                 </div>
-                <h2 class="text-2xl font-semibold mb-2">Currency Tracking</h2>
-                <p class="text-slate-400 text-sm">Coming Soon: Real-time USD to JPY tracking.</p>
+
+                <div class="mb-4 h-20">
+                    <canvas id="currencyChart"></canvas>
+                </div>
+
+                <div class="mt-auto space-y-2">
+                    <div class="relative">
+                        <span id="label-top" class="absolute left-3 top-2 text-slate-500">$</span>
+                        <input type="number" id="input-top" placeholder="USD Amount" 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-7 pr-3 text-white focus:outline-none focus:border-green-500 transition">
+                    </div>
+                    
+                    <div class="flex items-center justify-center">
+                        <button id="swap-btn" class="bg-slate-700 hover:bg-slate-600 text-slate-300 p-2 rounded-full transition transform active:scale-90 active:rotate-180">
+                            <i class="fa-solid fa-repeat"></i>
+                        </button>
+                    </div>
+
+                    <div class="relative">
+                        <span id="label-bottom" class="absolute left-3 top-2 text-slate-500">¥</span>
+                        <input type="number" id="input-bottom" placeholder="0" readonly
+                            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-2 pl-7 pr-3 text-slate-400 outline-none">
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // --- 1. TIME LOGIC ---
         function updateClocks() {
             fetch('/api/time')
                 .then(res => res.json())
@@ -89,6 +117,76 @@
         }
         setInterval(updateClocks, 60000);
         updateClocks();
+
+        // --- 2. CURRENCY LOGIC ---
+        let exchangeRate = 150.00; // Default until API loads
+        let isUsdToJpy = true;
+
+        const inputTop = document.getElementById('input-top');
+        const inputBottom = document.getElementById('input-bottom');
+        const labelTop = document.getElementById('label-top');
+        const labelBottom = document.getElementById('label-bottom');
+        const swapBtn = document.getElementById('swap-btn');
+
+        function updateCurrency() {
+            fetch('/api/currency')
+                .then(res => res.json())
+                .then(data => {
+                    exchangeRate = data.rate;
+                    document.getElementById('current-rate').innerText = `¥${data.rate}`;
+                    renderChart(data.history);
+                });
+        }
+
+        inputTop.addEventListener('input', (e) => {
+            const val = e.target.value;
+            if (isUsdToJpy) {
+                inputBottom.value = (val * exchangeRate).toFixed(0);
+            } else {
+                inputBottom.value = (val / exchangeRate).toFixed(2);
+            }
+        });
+
+        swapBtn.addEventListener('click', () => {
+            isUsdToJpy = !isUsdToJpy;
+            inputTop.value = '';
+            inputBottom.value = '';
+            if (isUsdToJpy) {
+                labelTop.innerText = '$';
+                labelBottom.innerText = '¥';
+                inputTop.placeholder = 'USD';
+            } else {
+                labelTop.innerText = '¥';
+                labelBottom.innerText = '$';
+                inputTop.placeholder = 'JPY';
+            }
+        });
+
+        function renderChart(historyData) {
+            const ctx = document.getElementById('currencyChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['', '', '', '', '', '', ''],
+                    datasets: [{
+                        data: historyData,
+                        borderColor: '#22c55e',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true,
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: { x: { display: false }, y: { display: false } },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+        updateCurrency();
     </script>
 </body>
 </html>

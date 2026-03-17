@@ -1,6 +1,6 @@
-from flask import render_template
-from flask import Blueprint
+from flask import render_template, Blueprint, jsonify
 from datetime import datetime, timedelta, timezone
+import requests, os, random
 
 main = Blueprint('main', __name__)
 
@@ -25,3 +25,33 @@ def get_time():
         "home": home_now.strftime("%H:%M"),
         "home_date": home_now.strftime("%a, %b %d")
     }
+
+@main.route('/api/currency')
+def get_currency():
+    # Fetch the key from the environment
+    api_key = os.getenv('EXCHANGE_RATE_API_KEY')
+
+    if not api_key:
+        return jsonify({"error": "API Key missing"}), 500
+
+    # Using ExchangeRate-API for simplicity
+    url = f"https://v6.exchangerate-api.com/v6/{api_key}/pair/USD/JPY"
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+        current_rate = data['conversion_rate']
+
+        # Generate mock historical data around the current rate for the past 6 days
+        mock_history = [round(current_rate * random.uniform(0.98, 1.01), 2) for _ in range(6)]
+        mock_history.append(current_rate) # Today's real rate is the last point
+
+        if data['result'] == 'success':
+            return jsonify({
+                "rate": current_rate,
+                "history": mock_history
+            })
+        else:
+            return jsonify({"error": "Failed to fetch exchange rate"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
