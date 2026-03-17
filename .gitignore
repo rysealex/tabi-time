@@ -1,1 +1,4 @@
 app/static/photos/*
+data/points.json
+__pychache__/
+.env
