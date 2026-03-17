@@ -1,2 +1,2 @@
-# Tabi(旅)Time 🏯
-### Your Personal Japan Travel Nexus & Dashboard
+# Tabi(旅)Time
+### Your Personal Nihon Travel Nexus & Dashboard

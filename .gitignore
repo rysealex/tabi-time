@@ -1,4 +1,5 @@
 app/static/photos/*
 data/points.json
-__pychache__/
+__pycache__/
+venv/
 .env

@@ -1,0 +1,11 @@
+# Web Framework
+Flask==3.1.3
+
+# Image Processing (GPS Extraction)
+Pillow==12.1.1
+
+# Environment Variables & Secrets
+python-dotenv==1.2.2
+
+# External API Requests (For Currency Conversion)
+requests==2.32.3
