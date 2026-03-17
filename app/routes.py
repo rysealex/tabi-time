@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, jsonify
+from flask import json, render_template, Blueprint, jsonify
 from datetime import datetime, timedelta, timezone
 import requests, os, random
 
@@ -11,6 +11,14 @@ def index():
 @main.route('/journal')
 def journal():
     return render_template('journal.html')
+
+@main.route('/api/points')
+def get_points():
+    # Path to the data folder
+    data_path = os.path.join(os.getcwd(), 'data', 'points.json')
+    with open(data_path, 'r') as f:
+        data = json.load(f)
+    return jsonify(data)
 
 @main.route('/api/time')
 def get_time():
