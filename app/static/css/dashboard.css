@@ -1,0 +1,24 @@
+/* Custom Pulse Animation for the Clock */
+.clock-status-dot {
+    @apply relative inline-flex rounded-full h-3 w-3 bg-purple-500;
+}
+
+/* Ensure the grid cards stay uniform */
+.dashboard-card {
+    @apply bg-slate-800 p-8 rounded-3xl border border-slate-700 flex flex-col transition-all duration-300;
+}
+
+/* Chrome/Safari Scrollbar styling for the dark theme */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
