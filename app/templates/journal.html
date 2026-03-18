@@ -11,10 +11,40 @@
     
     <style>
         /* Custom Leaflet Dark Mode Overrides */
-        .leaflet-popup-content-wrapper { background: #1e293b !important; color: white !important; border-radius: 1rem; border: 1px solid #334155; }
-        .leaflet-popup-tip { background: #1e293b !important; }
+        .leaflet-popup-content-wrapper { 
+            background: #1e293b !important; 
+            color: white !important; 
+            border-radius: 12px !important; /* Curved corners */
+            border: 1px solid #3b82f6; /* Blue border */
+            padding: 0;
+            /* Blue Outer Glow */
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5) !important;
+        }
+        
+        .leaflet-popup-tip { 
+            background: #1e293b !important; 
+            border: 1px solid #3b82f6;
+        }
+
         .leaflet-container { background: #0f172a !important; }
+        .leaflet-popup-content { margin: 8px !important; }
+
+        /* Distance Tooltip Styling */
+        .dist-tooltip .leaflet-popup-content-wrapper {
+            background: #0f172a !important;
+            border: 1px solid #3b82f6 !important;
+            border-radius: 8px !important;
+            /* Tighter blue glow for tooltips */
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.6) !important;
+        }
+        .dist-tooltip .leaflet-popup-tip { display: none; }
+
         #map { height: calc(100vh - 160px); width: 100%; }
+
+        .leaflet-container a.leaflet-popup-close-button {
+            padding: 8px 8px 0 0 !important;
+            color: #94a3b8 !important;
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-white font-sans p-6">
@@ -53,7 +83,7 @@
             attribution: '&copy; CartoDB' 
         });
         const stamenTerrain = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            attribution: '&copy; Stadia Maps & Stamen Design',
         });
         const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
             attribution: '&copy; Esri' 
@@ -68,77 +98,115 @@
 
         const baseMaps = {
             "<span class='text-slate-900 font-sans'>Mountain Terrain</span>": stamenTerrain,
-            "<span class='text-slate-900'>Dark Mode</span>": darkMatter,
-            "<span class='text-slate-900'>Satellite</span>": satellite
+            "<span class='text-slate-900 font-sans'>Dark Protocol</span>": darkMatter,
+            "<span class='text-slate-900 font-sans'>Satellite View</span>": satellite
         };
 
         L.control.layers(baseMaps).addTo(map);
 
-        // 3. Fetch Points
+        // 3. Distance Helper
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const km = R * c;
+            return {
+                km: km.toFixed(1),
+                miles: (km * 0.621371).toFixed(1)
+            };
+        }
+
+        // 4. Fetch Points
         fetch('/api/points')
             .then(res => res.json())
             .then(points => {
                 if (points.length === 0) return;
 
-                const coords = points.map(p => [p.lat, p.lon]);
-                
-                // Draw Dashed Path
-                const path = L.polyline(coords, {
-                    color: '#3b82f6',
-                    weight: 3,
-                    opacity: 0.8,
-                    dashArray: '8, 12'
-                }).addTo(map);
+                const bounds = [];
 
-                // Add Markers
+                // Draw Path Segments
+                for (let i = 0; i < points.length - 1; i++) {
+                    const p1 = points[i];
+                    const p2 = points[i+1];
+                    const dist = calculateDistance(p1.lat, p1.lon, p2.lat, p2.lon);
+
+                    const segment = L.polyline([[p1.lat, p1.lon], [p2.lat, p2.lon]], {
+                        color: '#3b82f6',
+                        weight: 4,
+                        opacity: 0.6,
+                        dashArray: '8, 12',
+                        interactive: true
+                    }).addTo(map);
+
+                    segment.on('mouseover', function(e) {
+                        this.setStyle({ color: '#60a5fa', opacity: 1, weight: 6 });
+                        L.popup({ closeButton: false, className: 'dist-tooltip', offset: [0, -10] })
+                            .setLatLng(e.latlng)
+                            .setContent(`<div class="text-[10px] font-mono p-1 text-white text-center">${dist.km} km<br>${dist.miles} mi</div>`)
+                            .openOn(map);
+                    });
+
+                    segment.on('mouseout', function(e) {
+                        this.setStyle({ color: '#3b82f6', opacity: 0.6, weight: 4 });
+                        map.closePopup();
+                    });
+                }
+
+                // Add Point Markers
                 points.forEach((p, index) => {
-                const marker = L.circleMarker([p.lat, p.lon], {
-                    radius: 8,
-                    fillColor: "#3b82f6",
-                    color: "#fff",
-                    weight: 2,
-                    opacity: 1,
-                    fillOpacity: 1
-                }).addTo(map);
-
-                // Format the date/time if it exists, otherwise use a fallback
-                const photoTime = p.time ? p.time : "Time Unknown";
-                const altitude = p.alt ? `${Math.round(p.alt)}m` : "---";
-
-                const popupContent = `
-                    <div class="w-52 p-0 bg-slate-800">
-                        <img src="/static/photos/${p.img}" 
-                            class="rounded-none mb-3 w-full h-32 object-cover shadow-sm" 
-                            alt="Travel Photo">
+                    bounds.push([p.lat, p.lon]);
                         
-                        <div class="px-2 pb-2 space-y-2">
-                            <div class="flex justify-between items-center border-b border-slate-700 pb-1">
-                                <span class="text-[10px] font-bold text-blue-400 uppercase tracking-tighter italic">Entry #${index + 1}</span>
-                                <span class="text-[10px] font-mono text-white">${photoTime}</span>
-                            </div>
+                    const marker = L.circleMarker([p.lat, p.lon], {
+                        radius: 8,
+                        fillColor: "#3b82f6",
+                        color: "#fff",
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 1
+                    }).addTo(map);
+
+                    const photoTime = p.time ? p.time : "Unknown";
+                    const altitude = p.alt ? `${Math.round(p.alt)}m` : "---";
+
+                    const popupContent = `
+                        <div class="w-52 p-0 bg-slate-800">
+                            <img src="/static/photos/${p.img}" 
+                                class="rounded-md mb-3 w-full h-32 object-cover shadow-sm" 
+                                alt="Travel Photo">
                             
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <p class="text-[8px] text-slate-500 uppercase font-bold">Altitude</p>
-                                    <p class="text-[10px] font-mono text-white">${altitude}</p>
+                            <div class="px-2 pb-2 space-y-2">
+                                <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+                                    <span class="text-[10px] font-bold text-blue-400 uppercase tracking-tighter italic">Stop #${index + 1}</span>
+                                    <span class="text-[10px] font-mono text-white">${photoTime}</span>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-[8px] text-slate-500 uppercase font-bold">Coordinates</p>
-                                    <p class="text-[10px] font-mono text-white">${p.lat.toFixed(3)}, ${p.lon.toFixed(3)}</p>
+                                
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <p class="text-[10px] text-slate-500 uppercase font-bold">Altitude</p>
+                                        <p class="text-[10px] font-mono text-white">${altitude}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[10px] text-slate-500 uppercase font-bold">Coords</p>
+                                        <p class="text-[10px] font-mono text-white">${p.lat.toFixed(2)}, ${p.lon.toFixed(2)}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
 
-                marker.bindPopup(popupContent, {
-                    maxWidth: 240,
-                    minWidth: 220,
-                    offset: [0, -5]
+                    marker.bindPopup(popupContent, {
+                        maxWidth: 240,
+                        minWidth: 220,
+                        offset: [0, -5]
+                    });
                 });
-            });
 
-                map.fitBounds(path.getBounds(), { padding: [80, 80] });
+                if (bounds.length > 0) {
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                }
             });
     </script>
 </body>
