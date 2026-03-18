@@ -92,34 +92,51 @@
 
                 // Add Markers
                 points.forEach((p, index) => {
-                    const marker = L.circleMarker([p.lat, p.lon], {
-                        radius: 8,
-                        fillColor: "#3b82f6",
-                        color: "#fff",
-                        weight: 2,
-                        opacity: 1,
-                        fillOpacity: 1
-                    }).addTo(map);
+                const marker = L.circleMarker([p.lat, p.lon], {
+                    radius: 8,
+                    fillColor: "#3b82f6",
+                    color: "#fff",
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 1
+                }).addTo(map);
 
-                    // Tailwind-styled Popup Content
-                    const popupContent = `
-                        <div class="w-48 p-0">
-                            <img src="/static/photos/${p.img}" 
-                                class="rounded-md mb-2 w-full h-32 object-cover shadow-sm" 
-                                alt="Travel Photo">
-                            <div class="flex justify-between items-center px-0.5">
-                                <span class="text-[9px] font-bold text-blue-400 uppercase tracking-tighter">Stop ${index + 1}</span>
-                                <span class="text-[9px] font-mono text-slate-400">${p.lat.toFixed(2)}, ${p.lon.toFixed(2)}</span>
+                // Format the date/time if it exists, otherwise use a fallback
+                const photoTime = p.time ? p.time : "Time Unknown";
+                const altitude = p.alt ? `${Math.round(p.alt)}m` : "---";
+
+                const popupContent = `
+                    <div class="w-52 p-0 bg-slate-800">
+                        <img src="/static/photos/${p.img}" 
+                            class="rounded-none mb-3 w-full h-32 object-cover shadow-sm" 
+                            alt="Travel Photo">
+                        
+                        <div class="px-2 pb-2 space-y-2">
+                            <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+                                <span class="text-[10px] font-bold text-blue-400 uppercase tracking-tighter italic">Entry #${index + 1}</span>
+                                <span class="text-[10px] font-mono text-white">${photoTime}</span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <p class="text-[8px] text-slate-500 uppercase font-bold">Altitude</p>
+                                    <p class="text-[10px] font-mono text-white">${altitude}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[8px] text-slate-500 uppercase font-bold">Coordinates</p>
+                                    <p class="text-[10px] font-mono text-white">${p.lat.toFixed(3)}, ${p.lon.toFixed(3)}</p>
+                                </div>
                             </div>
                         </div>
-                    `;
+                    </div>
+                `;
 
-                    marker.bindPopup(popupContent, {
-                        maxWidth: 240,
-                        minWidth: 240,
-                        offset: [0, -5]
-                    });
+                marker.bindPopup(popupContent, {
+                    maxWidth: 240,
+                    minWidth: 220,
+                    offset: [0, -5]
                 });
+            });
 
                 map.fitBounds(path.getBounds(), { padding: [80, 80] });
             });
