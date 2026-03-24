@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅Time | Photo Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+</head>
+<body class="bg-slate-900 text-white font-sans p-6">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-4">
+                <a href="/" class="bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl border border-slate-700 transition">
+                    <i class="fa-solid fa-house text-blue-400"></i>
+                </a>
+                <div>
+                    <h1 class="text-3xl font-bold tracking-tight">Photo Gallery</h1>
+                    <p class="text-slate-400 text-xs uppercase tracking-widest">Browse and manage your travel photos</p>
+                </div>
+            </div>
+        </header>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/gallery.js') }}"></script>
+</body>
+</html>

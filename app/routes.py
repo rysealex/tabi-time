@@ -12,6 +12,10 @@ def index():
 def journal():
     return render_template('journal.html')
 
+@main.route('/gallery')
+def gallery():
+    return render_template('gallery.html')
+
 @main.route('/api/points')
 def get_points():
     # Path to the data folder
