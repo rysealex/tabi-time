@@ -1,0 +1,67 @@
+/* Date Grouping Headers */
+.date-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.date-label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #64748b; /* slate-500 */
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.date-line {
+    height: 1px;
+    flex-grow: 1;
+    background-color: #334155; /* slate-700 */
+}
+
+/* Image Hover Glow */
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    background-color: #1e293b;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-item:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    transform: translateY(-2px);
+    z-index: 10;
+}
+
+/* Modal Animation */
+#lightbox.flex {
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#lightbox .bg-slate-900\/80 {
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Make sure the download button looks like a primary action */
+#lb-download {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+#lb-download:hover {
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+    transform: translateY(-1px);
+}

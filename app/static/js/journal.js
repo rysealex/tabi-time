@@ -87,6 +87,8 @@ function renderMap(filteredPoints) {
 
         const photoTime = p.time ? p.time : "Unknown";
         const altitude = p.alt ? `${Math.round(p.alt)}m` : "---";
+        const globalIndex = allPoints.findIndex(point => point.img === p.img);
+        const entryID = String(globalIndex + 1).padStart(3, '0');
 
         const popupContent = `
             <div class="w-52 p-0 bg-slate-800">
@@ -94,10 +96,16 @@ function renderMap(filteredPoints) {
                     class="rounded-md mb-3 w-full h-32 object-cover shadow-sm" 
                     alt="Travel Photo">
                 
-                <div class="px-2 pb-2 space-y-2">
-                    <div class="flex justify-between items-center border-b border-slate-700 pb-1">
-                        <span class="text-[10px] font-bold text-blue-400 uppercase tracking-tighter italic">Stop #${index + 1}</span>
-                        <span class="text-[10px] font-mono text-white">${photoTime}</span>
+                <div class="px-2 pb-1 space-y-1">
+                    <div class="grid grid-cols-2 gap-2 border-b border-slate-700 pb-2">
+                        <div>
+                            <p class="text-[10px] text-slate-500 uppercase font-bold">Entry ID</p>
+                            <p class="text-[10px] font-bold text-blue-400 uppercase tracking-tighter italic">#${entryID}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-slate-500 uppercase font-bold">Captured</p>
+                            <p class="text-[10px] font-mono text-white uppercase">${photoTime}</p>
+                        </div>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-2">
@@ -106,7 +114,7 @@ function renderMap(filteredPoints) {
                             <p class="text-[10px] font-mono text-white">${altitude}</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-[10px] text-slate-500 uppercase font-bold">Coords</p>
+                            <p class="text-[10px] text-slate-500 uppercase font-bold">GPS Coords</p>
                             <p class="text-[10px] font-mono text-white">${p.lat.toFixed(2)}, ${p.lon.toFixed(2)}</p>
                         </div>
                     </div>
