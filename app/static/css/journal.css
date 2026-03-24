@@ -33,3 +33,27 @@
     padding: 8px 8px 0 0 !important;
     color: #94a3b8 !important;
 }
+
+/* Base style for all day buttons */
+.day-btn {
+    background-color: #1e293b; /* slate-800 */
+    border: 1px solid #334155; /* slate-700 */
+    color: #94a3b8; /* slate-400 */
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.day-btn:hover {
+    border-color: #3b82f6; /* blue-500 */
+    color: #f8fafc;
+}
+
+/* Highlighted state - The "Glow" */
+.day-btn.active {
+    background-color: rgba(59, 130, 246, 0.2) !important; /* blue-600/20 */
+    border-color: #3b82f6 !important; /* blue-500 */
+    color: #60a5fa !important; /* blue-400 */
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+    outline: 1px solid rgba(59, 130, 246, 0.5);
+}
