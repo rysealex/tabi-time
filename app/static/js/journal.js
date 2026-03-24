@@ -158,8 +158,13 @@ fetch('/api/points')
 
         uniqueDates.forEach((date, index) => {
             const btn = document.createElement('button');
-            btn.className = 'day-btn px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all';
-            btn.innerText = `Day ${index + 1}`;
+            btn.className = 'day-btn px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest';
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric' 
+            }).toUpperCase();
+            btn.innerText = formattedDate;
             btn.onclick = function() { filterByDay(date, this); };
             picker.appendChild(btn);
         });
