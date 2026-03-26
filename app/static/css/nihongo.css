@@ -25,6 +25,11 @@
     white-space: nowrap;
 }
 
+.cat-btn:hover {
+    border-color: #f97316; /* orange-500 */
+    color: #f8fafc;
+}
+
 /* The "Glow" Highlighted State */
 .cat-btn.active {
     background-color: rgba(249, 115, 22, 0.15) !important; /* orange-500/15 */
