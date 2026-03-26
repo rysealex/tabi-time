@@ -16,6 +16,10 @@ def journal():
 def gallery():
     return render_template('gallery.html')
 
+@main.route('/nihongo')
+def nihongo():
+    return render_template('nihongo.html')
+
 @main.route('/api/points')
 def get_points():
     # Path to the data folder
