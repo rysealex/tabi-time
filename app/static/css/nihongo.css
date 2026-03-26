@@ -1,0 +1,21 @@
+/* 3D Flashcard Math */
+.perspective-1000 { perspective: 1000px; }
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
+
+#flashcard.is-flipped {
+    transform: rotateY(180deg);
+}
+
+/* Category Buttons */
+.cat-btn {
+    @apply px-5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-slate-800 border border-slate-700 text-slate-400 transition-all;
+}
+
+.cat-btn.active {
+    @apply bg-orange-600/20 border-orange-500 text-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.3)];
+}
+
+/* Hide scrollbar for the filter bar */
+.scrollbar-hide::-webkit-scrollbar { display: none; }

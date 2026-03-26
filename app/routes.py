@@ -28,6 +28,14 @@ def get_points():
         data = json.load(f)
     return jsonify(data)
 
+@main.route('/api/phrases')
+def get_phrases():
+    # Path to the data folder
+    data_path = os.path.join(os.getcwd(), 'data', 'phrases.json')
+    with open(data_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    return jsonify(data)
+
 @main.route('/api/time')
 def get_time():
     # Japan is UTC+9
