@@ -9,3 +9,6 @@ python-dotenv==1.2.2
 
 # External API Requests (For Currency Conversion)
 requests==2.32.3
+
+# Watchdog for Auto-Reloading During Development
+watchdog==3.0.0
