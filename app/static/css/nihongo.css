@@ -9,12 +9,29 @@
 }
 
 /* Category Buttons */
+/* Base style for category buttons */
 .cat-btn {
-    @apply px-5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-slate-800 border border-slate-700 text-slate-400 transition-all;
+    background-color: #1e293b; /* slate-800 */
+    border: 1px solid #334155; /* slate-700 */
+    color: #94a3b8; /* slate-400 */
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.75rem;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
+/* The "Glow" Highlighted State */
 .cat-btn.active {
-    @apply bg-orange-600/20 border-orange-500 text-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.3)];
+    background-color: rgba(249, 115, 22, 0.15) !important; /* orange-500/15 */
+    border-color: #f97316 !important; /* orange-500 */
+    color: #fb923c !important; /* orange-400 */
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+    outline: 1px solid rgba(249, 115, 22, 0.5);
 }
 
 /* Hide scrollbar for the filter bar */

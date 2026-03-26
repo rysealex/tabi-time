@@ -20,12 +20,14 @@ function loadPhrases() {
 function setupCategories() {
     const filterContainer = document.getElementById('category-filter');
     const categories = [...new Set(allPhrases.map(p => p.category))];
+
+    filterContainer.innerHTML = '<button onclick="filterPhrases(\'all\', this)" class="cat-btn active">All Categories</button>';
     
     categories.forEach(cat => {
         const btn = document.createElement('button');
         btn.className = 'cat-btn';
         btn.innerText = cat;
-        btn.onclick = (e) => filterPhrases(cat, e.target);
+        btn.onclick = function() { filterPhrases(cat, this); };
         filterContainer.appendChild(btn);
     });
 }
@@ -53,7 +55,7 @@ function resetCard() {
 
 function showCard() {
     if (filteredPhrases.length === 0) {
-        document.getElementById('card-english').innerText = "No Protocols Found";
+        document.getElementById('card-english').innerText = "No Categories Found";
         document.getElementById('card-kanji').innerText = "---";
         return;
     }
@@ -62,7 +64,7 @@ function showCard() {
     document.getElementById('card-english').innerText = p.english;
     document.getElementById('card-kanji').innerText = p.kanji;
     document.getElementById('card-romaji').innerText = p.romaji;
-    document.getElementById('card-cat').innerText = `Protocol: ${p.category}`;
+    document.getElementById('card-cat').innerText = `Category: ${p.category}`;
     
     document.getElementById('card-counter').innerText = `Phrase ${currentIndex + 1} of ${filteredPhrases.length}`;
 }
@@ -75,3 +77,31 @@ function nextCard() {
         showCard();
     }, 250);
 }
+
+function prevCard() {
+    resetCard();
+    setTimeout(() => {
+        currentIndex = (currentIndex - 1 + filteredPhrases.length) % filteredPhrases.length;
+        showCard();
+    }, 250);
+}
+
+
+window.shuffleDeck = function() {
+    resetCard();
+    setTimeout(() => {
+        for (let i = filteredPhrases.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [filteredPhrases[i], filteredPhrases[j]] = [filteredPhrases[j], filteredPhrases[i]];
+        }
+        currentIndex = 0;
+        showCard();
+    }, 250);
+};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { flipCard(); e.preventDefault(); } // Space to flip
+    if (e.key === 'ArrowRight') nextCard(); // Nav right
+    if (e.key === 'ArrowLeft') prevCard(); // Nav left
+    if (e.key === 's' || e.key === 'S') shuffleDeck(); // Shuffle
+});

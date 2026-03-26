@@ -28,14 +28,14 @@
 
         <main class="flex flex-col items-center">
             <div id="category-filter" class="flex gap-3 mb-12 overflow-x-auto pb-2 scrollbar-hide w-full justify-center">
-                <button onclick="filterPhrases('all', this)" class="cat-btn active">All Protocols</button>
+                <button onclick="filterPhrases('all', this)" class="cat-btn active">All Categories</button>
                 </div>
 
             <div class="perspective-1000 w-full max-w-md h-80 group cursor-pointer" onclick="flipCard()">
                 <div id="flashcard" class="relative w-full h-full transition-transform duration-500 preserve-3d">
                     
                     <div class="absolute inset-0 bg-slate-800 border-2 border-slate-700 rounded-3xl p-8 flex flex-col items-center justify-center backface-hidden shadow-2xl">
-                        <p id="card-cat" class="text-[10px] text-orange-500 font-bold uppercase tracking-[0.3em] mb-4">Protocol</p>
+                        <p id="card-cat" class="text-[10px] text-orange-500 font-bold uppercase tracking-[0.3em] mb-4">Category</p>
                         <h2 id="card-english" class="text-3xl font-bold text-center leading-tight">Loading...</h2>
                         <p class="mt-8 text-slate-500 text-[10px] uppercase tracking-widest animate-pulse">Tap to Translate</p>
                     </div>
@@ -43,8 +43,11 @@
                     <div class="absolute inset-0 bg-slate-800 border-2 border-orange-500 rounded-3xl p-8 flex flex-col items-center justify-center backface-hidden rotate-y-180 shadow-[0_0_30px_rgba(249,115,22,0.2)]">
                         <h2 id="card-kanji" class="text-5xl font-bold text-white mb-4">---</h2>
                         <p id="card-romaji" class="text-xl text-orange-400 font-mono italic">---</p>
-                        <div class="mt-8 flex gap-4">
-                            <button onclick="event.stopPropagation(); nextCard();" class="bg-orange-600 hover:bg-orange-500 text-white px-6 py-2 rounded-xl text-xs font-bold transition">
+                        <div class="mt-8 flex gap-3">
+                            <button onclick="event.stopPropagation(); shuffleDeck();" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                                <i class="fa-solid fa-shuffle"></i>
+                            </button>
+                            <button onclick="event.stopPropagation(); nextCard();" class="bg-orange-600 hover:bg-orange-500 text-white px-8 py-2 rounded-xl text-xs font-bold transition shadow-lg">
                                 NEXT PHRASE
                             </button>
                         </div>
@@ -53,7 +56,7 @@
             </div>
 
             <div class="mt-12 text-center">
-                <p id="card-counter" class="text-slate-500 font-mono text-[10px] uppercase tracking-widest">Phrase 0 of 0</p>
+                <p id="card-counter" class="text-slate-400 font-mono text-[10px] uppercase tracking-widest">Phrase 0 of 0</p>
             </div>
         </main>
 
