@@ -2,6 +2,10 @@ import os
 import json
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
+from pillow_heif import register_heif_opener
+
+# This allows PILLOW to read .HEIC files just like .JPG
+register_heif_opener()
 
 def get_decimal_from_dms(dms, ref):
     degrees = float(dms[0])
@@ -16,11 +20,27 @@ def extract_trip_data(photo_dir, output_json):
 
     # Ensure data directory exists
     os.makedirs(os.path.dirname(output_json), exist_ok=True)
+
+    # Supported formats
+    valid_extensions = ('.jpg', '.jpeg', '.heic')
     
     for filename in os.listdir(photo_dir):
-        if filename.lower().endswith(('jpg', 'jpeg')):
+        if filename.lower().endswith(valid_extensions):
             path = os.path.join(photo_dir, filename)
             try:
+                # Handle both JPG and HEIC formats seamlessly
+                if filename.lower().endswith('.heic'):
+                    img = Image.open(path)
+                    # Create a JPG version of the HEIC file for easier handling
+                    jpg_filename = os.path.splitext(filename)[0] + ".jpg"
+                    jpg_path = os.path.join(photo_dir, jpg_filename)
+                    img.save(jpg_path, "JPEG", quality=90)
+                    os.remove(path)
+                    # Update path and filename to the new JPG version
+                    filename = jpg_filename
+                    path = jpg_path
+                
+                # Extract EXIF data
                 img = Image.open(path)
                 exif_raw = img._getexif()
                 if not exif_raw:
