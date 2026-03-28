@@ -1,7 +1,9 @@
 import time
 import os
+import sys
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from exif_parser import extract_trip_data
 
 PHOTO_DIR = os.path.join(os.getcwd(), 'app', 'static', 'photos')
