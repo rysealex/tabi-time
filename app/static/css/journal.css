@@ -1,7 +1,7 @@
 /* Custom Leaflet Dark Mode Overrides */
-.leaflet-popup-content-wrapper { 
-    background: #1e293b !important; 
-    color: white !important; 
+.leaflet-popup-content-wrapper {
+    background: #1e293b !important;
+    color: white !important;
     border-radius: 12px !important; /* Curved corners */
     border: 1px solid #3b82f6; /* Blue border */
     padding: 0;
@@ -9,13 +9,17 @@
     box-shadow: 0 0 15px rgba(59, 130, 246, 0.5) !important;
 }
 
-.leaflet-popup-tip { 
-    background: #1e293b !important; 
+.leaflet-popup-tip {
+    background: #1e293b !important;
     border: 1px solid #3b82f6;
 }
 
-.leaflet-container { background: #0f172a !important; }
-.leaflet-popup-content { margin: 8px !important; }
+.leaflet-container {
+    background: #0f172a !important;
+}
+.leaflet-popup-content {
+    margin: 8px !important;
+}
 
 /* Distance Tooltip Styling */
 .dist-tooltip .leaflet-popup-content-wrapper {
@@ -25,9 +29,14 @@
     /* Tighter blue glow for tooltips */
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.6) !important;
 }
-.dist-tooltip .leaflet-popup-tip { display: none; }
+.dist-tooltip .leaflet-popup-tip {
+    display: none;
+}
 
-#map { height: calc(100vh - 160px); width: 100%; }
+#map {
+    height: calc(100vh - 160px);
+    width: 100%;
+}
 
 .leaflet-container a.leaflet-popup-close-button {
     padding: 8px 8px 0 0 !important;

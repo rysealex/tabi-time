@@ -5,3 +5,4 @@ data/phrases.json
 __pycache__/
 venv/
 .env
+.prettierrc

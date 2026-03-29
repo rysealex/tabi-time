@@ -1,75 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabi(旅)Time | Photo Gallery</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
-</head>
-<body class="bg-slate-900 text-white font-sans p-6">
-
-    <div class="max-w-7xl mx-auto">
-        <header class="flex justify-between items-center mb-8">
-            <div class="flex items-center gap-4">
-                <a href="/" class="bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl border border-slate-700 transition">
-                    <i class="fa-solid fa-house text-blue-400"></i>
-                </a>
-                <div>
-                    <h1 class="text-3xl font-bold tracking-tight">Photo Gallery</h1>
-                    <p class="text-slate-400 text-xs uppercase tracking-widest">Browse and manage your travel photos</p>
-                </div>
-            </div>
-        </header>
-
-        <main>
-            <div id="gallery-container" class="space-y-12">
-                <div class="flex flex-col items-center justify-center py-20 text-slate-600">
-                    <i class="fa-solid fa-circle-notch animate-spin text-3xl mb-4 text-blue-500"></i>
-                    <p class="font-mono text-xs uppercase tracking-widest">Loading Archive...</p>
-                </div>
-            </div>
-        </main>
-
-        <div id="lightbox" class="fixed inset-0 z-[2000] bg-slate-950/95 backdrop-blur-md hidden flex-col items-center justify-center p-4" onclick="closeLightbox()">
-    
-            <div class="relative max-w-5xl w-full flex flex-col items-center" onclick="event.stopPropagation()">
-                <img id="lightbox-img" src="" class="max-h-[70vh] max-w-full shadow-2xl border border-slate-800 object-contain">
-                
-                <div class="w-full mt-6 bg-slate-900/80 border border-slate-700 p-6 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div class="flex gap-8">
-                        <div>
-                            <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">Entry ID</p>
-                            <p id="lb-id" class="text-blue-400 font-mono text-sm">#000</p>
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">Altitude</p>
-                            <p id="lb-alt" class="text-white font-mono text-sm">---</p>
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">Captured</p>
-                            <p id="lb-time" class="text-white font-mono text-sm">---</p>
-                        </div>
-                    </div>
-
-                    <div class="text-center md:text-right border-t md:border-t-0 md:border-l border-slate-700 pt-4 md:pt-0 md:pl-8">
-                        <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">GPS Coords</p>
-                        <p id="lb-coords" class="text-white font-mono text-xs italic">00.0000, 00.0000</p>
-                    </div>
-
-                    <a id="lb-download" href="" download class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2">
-                        <i class="fa-solid fa-download"></i> SAVE IMAGE
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tabi(旅)Time | Photo Gallery</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}" />
+    </head>
+    <body class="bg-slate-900 text-white font-sans p-6">
+        <div class="max-w-7xl mx-auto">
+            <header class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-4">
+                    <a
+                        href="/"
+                        class="bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl border border-slate-700 transition"
+                    >
+                        <i class="fa-solid fa-house text-blue-400"></i>
                     </a>
+                    <div>
+                        <h1 class="text-3xl font-bold tracking-tight">Photo Gallery</h1>
+                        <p class="text-slate-400 text-xs uppercase tracking-widest">
+                            Browse and manage your travel photos
+                        </p>
+                    </div>
                 </div>
+            </header>
 
-                <button onclick="closeLightbox()" class="absolute -top-12 right-0 text-slate-400 hover:text-white text-3xl">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+            <main>
+                <div id="gallery-container" class="space-y-12">
+                    <div class="flex flex-col items-center justify-center py-20 text-slate-600">
+                        <i
+                            class="fa-solid fa-circle-notch animate-spin text-3xl mb-4 text-blue-500"
+                        ></i>
+                        <p class="font-mono text-xs uppercase tracking-widest">
+                            Loading Archive...
+                        </p>
+                    </div>
+                </div>
+            </main>
+
+            <div
+                id="lightbox"
+                class="fixed inset-0 z-[2000] bg-slate-950/95 backdrop-blur-md hidden flex-col items-center justify-center p-4"
+                onclick="closeLightbox()"
+            >
+                <div
+                    class="relative max-w-5xl w-full flex flex-col items-center"
+                    onclick="event.stopPropagation()"
+                >
+                    <img
+                        id="lightbox-img"
+                        src=""
+                        class="max-h-[70vh] max-w-full shadow-2xl border border-slate-800 object-contain"
+                    />
+
+                    <div
+                        class="w-full mt-6 bg-slate-900/80 border border-slate-700 p-6 flex flex-col md:flex-row justify-between items-center gap-6"
+                    >
+                        <div class="flex gap-8">
+                            <div>
+                                <p
+                                    class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1"
+                                >
+                                    Entry ID
+                                </p>
+                                <p id="lb-id" class="text-blue-400 font-mono text-sm">#000</p>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1"
+                                >
+                                    Altitude
+                                </p>
+                                <p id="lb-alt" class="text-white font-mono text-sm">---</p>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1"
+                                >
+                                    Captured
+                                </p>
+                                <p id="lb-time" class="text-white font-mono text-sm">---</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="text-center md:text-right border-t md:border-t-0 md:border-l border-slate-700 pt-4 md:pt-0 md:pl-8"
+                        >
+                            <p
+                                class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1"
+                            >
+                                GPS Coords
+                            </p>
+                            <p id="lb-coords" class="text-white font-mono text-xs italic">
+                                00.0000, 00.0000
+                            </p>
+                        </div>
+
+                        <a
+                            id="lb-download"
+                            href=""
+                            download
+                            class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2"
+                        >
+                            <i class="fa-solid fa-download"></i> SAVE IMAGE
+                        </a>
+                    </div>
+
+                    <button
+                        onclick="closeLightbox()"
+                        class="absolute -top-12 right-0 text-slate-400 hover:text-white text-3xl"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <script src="{{ url_for('static', filename='js/gallery.js') }}"></script>
-</body>
+
+        <script src="{{ url_for('static', filename='js/gallery.js') }}"></script>
+    </body>
 </html>

@@ -1,8 +1,8 @@
 // --- 1. TIME LOGIC ---
 function updateClocks() {
     fetch('/api/time')
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
             document.getElementById('jp-time').innerText = data.japan;
             document.getElementById('jp-date').innerText = data.japan_date;
             document.getElementById('home-time').innerText = data.home;

@@ -1,67 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabi(旅)Time | NihonGo!</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/nihongo.css') }}">
-</head>
-<body class="bg-slate-900 text-white font-sans p-6">
-
-    <div class="max-w-7xl mx-auto">
-        <header class="flex justify-between items-center mb-8">
-            <div class="flex items-center gap-4">
-                <a href="/" class="bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl border border-slate-700 transition">
-                    <i class="fa-solid fa-house text-blue-400"></i>
-                </a>
-                <div>
-                    <h1 class="text-3xl font-bold tracking-tight">NihonGo!</h1>
-                    <p class="text-slate-400 text-xs uppercase tracking-widest">Master essential travel phrases and Kanji flashcards to navigate Japan with confidence</p>
-                </div>
-            </div>
-            <div class="hidden md:block text-right">
-                <span class="text-xs font-mono text-slate-500">v1.0</span>
-            </div>
-        </header>
-
-        <main class="flex flex-col items-center">
-            <div id="category-filter" class="flex gap-3 mb-12 overflow-x-auto pb-2 scrollbar-hide w-full justify-center">
-                <button onclick="filterPhrases('all', this)" class="cat-btn active">All Categories</button>
-                </div>
-
-            <div class="perspective-1000 w-full max-w-md h-80 group cursor-pointer" onclick="flipCard()">
-                <div id="flashcard" class="relative w-full h-full transition-transform duration-500 preserve-3d">
-                    
-                    <div class="absolute inset-0 bg-slate-800 border-2 border-slate-700 rounded-3xl p-8 flex flex-col items-center justify-center backface-hidden shadow-2xl">
-                        <p id="card-cat" class="text-[10px] text-orange-500 font-bold uppercase tracking-[0.3em] mb-4">Category</p>
-                        <h2 id="card-english" class="text-3xl font-bold text-center leading-tight">Loading...</h2>
-                        <p class="mt-8 text-slate-500 text-[10px] uppercase tracking-widest animate-pulse">Tap to Translate</p>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tabi(旅)Time | NihonGo!</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/nihongo.css') }}" />
+    </head>
+    <body class="bg-slate-900 text-white font-sans p-6">
+        <div class="max-w-7xl mx-auto">
+            <header class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-4">
+                    <a
+                        href="/"
+                        class="bg-slate-800 hover:bg-slate-700 p-3 rounded-2xl border border-slate-700 transition"
+                    >
+                        <i class="fa-solid fa-house text-blue-400"></i>
+                    </a>
+                    <div>
+                        <h1 class="text-3xl font-bold tracking-tight">NihonGo!</h1>
+                        <p class="text-slate-400 text-xs uppercase tracking-widest">
+                            Master essential travel phrases and Kanji flashcards to navigate Japan
+                            with confidence
+                        </p>
                     </div>
+                </div>
+                <div class="hidden md:block text-right">
+                    <span class="text-xs font-mono text-slate-500">v1.0</span>
+                </div>
+            </header>
 
-                    <div class="absolute inset-0 bg-slate-800 border-2 border-orange-500 rounded-3xl p-8 flex flex-col items-center justify-center backface-hidden rotate-y-180 shadow-[0_0_30px_rgba(249,115,22,0.2)]">
-                        <h2 id="card-kanji" class="text-5xl font-bold text-white mb-4">---</h2>
-                        <p id="card-romaji" class="text-xl text-orange-400 font-mono italic">---</p>
-                        <div class="mt-8 flex gap-3">
-                            <button onclick="event.stopPropagation(); shuffleDeck();" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-                                <i class="fa-solid fa-shuffle"></i>
-                            </button>
-                            <button onclick="event.stopPropagation(); nextCard();" class="bg-orange-600 hover:bg-orange-500 text-white px-8 py-2 rounded-xl text-xs font-bold transition shadow-lg">
-                                NEXT PHRASE
-                            </button>
+            <main class="flex flex-col items-center">
+                <div
+                    id="category-filter"
+                    class="flex gap-3 mb-12 overflow-x-auto pb-2 scrollbar-hide w-full justify-center"
+                >
+                    <button onclick="filterPhrases('all', this)" class="cat-btn active">
+                        All Categories
+                    </button>
+                </div>
+
+                <div
+                    class="perspective-1000 w-full max-w-md h-80 group cursor-pointer"
+                    onclick="flipCard()"
+                >
+                    <div
+                        id="flashcard"
+                        class="relative w-full h-full transition-transform duration-500 preserve-3d"
+                    >
+                        <div
+                            class="absolute inset-0 bg-slate-800 border-2 border-slate-700 rounded-3xl p-8 flex flex-col items-center justify-center backface-hidden shadow-2xl"
+                        >
+                            <p
+                                id="card-cat"
+                                class="text-[10px] text-orange-500 font-bold uppercase tracking-[0.3em] mb-4"
+                            >
+                                Category
+                            </p>
+                            <h2
+                                id="card-english"
+                                class="text-3xl font-bold text-center leading-tight"
+                            >
+                                Loading...
+                            </h2>
+                            <p
+                                class="mt-8 text-slate-500 text-[10px] uppercase tracking-widest animate-pulse"
+                            >
+                                Tap to Translate
+                            </p>
+                        </div>
+
+                        <div
+                            class="absolute inset-0 bg-slate-800 border-2 border-orange-500 rounded-3xl p-8 flex flex-col items-center justify-center backface-hidden rotate-y-180 shadow-[0_0_30px_rgba(249,115,22,0.2)]"
+                        >
+                            <h2 id="card-kanji" class="text-5xl font-bold text-white mb-4">---</h2>
+                            <p id="card-romaji" class="text-xl text-orange-400 font-mono italic">
+                                ---
+                            </p>
+                            <div class="mt-8 flex gap-3">
+                                <button
+                                    onclick="
+                                        event.stopPropagation();
+                                        shuffleDeck();
+                                    "
+                                    class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2"
+                                >
+                                    <i class="fa-solid fa-shuffle"></i>
+                                </button>
+                                <button
+                                    onclick="
+                                        event.stopPropagation();
+                                        nextCard();
+                                    "
+                                    class="bg-orange-600 hover:bg-orange-500 text-white px-8 py-2 rounded-xl text-xs font-bold transition shadow-lg"
+                                >
+                                    NEXT PHRASE
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="mt-12 text-center">
-                <p id="card-counter" class="text-slate-400 font-mono text-[10px] uppercase tracking-widest">Phrase 0 of 0</p>
-            </div>
-        </main>
+                <div class="mt-12 text-center">
+                    <p
+                        id="card-counter"
+                        class="text-slate-400 font-mono text-[10px] uppercase tracking-widest"
+                    >
+                        Phrase 0 of 0
+                    </p>
+                </div>
+            </main>
+        </div>
 
-    </div>
-    
-    <script src="{{ url_for('static', filename='js/nihongo.js') }}"></script>
-</body>
+        <script src="{{ url_for('static', filename='js/nihongo.js') }}"></script>
+    </body>
 </html>

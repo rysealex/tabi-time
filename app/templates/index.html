@@ -1,72 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabi(旅)Time | Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-</head>
-<body class="bg-slate-900 text-white font-sans">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tabi(旅)Time | Dashboard</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+    </head>
+    <body class="bg-slate-900 text-white font-sans">
+        <div class="container mx-auto px-6 py-12">
+            <header class="mb-12 text-center">
+                <h1 class="text-5xl font-bold mb-2">Tabi(旅)Time</h1>
+                <p class="text-slate-400 tracking-widest uppercase">
+                    Your Personal Nihon Travel Nexus & Dashboard
+                </p>
+            </header>
 
-    <div class="container mx-auto px-6 py-12">
-        <header class="mb-12 text-center">
-            <h1 class="text-5xl font-bold mb-2">Tabi(旅)Time</h1>
-            <p class="text-slate-400 tracking-widest uppercase">Your Personal Nihon Travel Nexus & Dashboard</p>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-purple-500/20 p-4 rounded-2xl">
-                        <i class="fa-solid fa-clock text-purple-500 text-2xl"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div
+                    class="bg-slate-800 p-8 rounded-3xl border border-slate-700 flex flex-col justify-between"
+                >
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-purple-500/20 p-4 rounded-2xl">
+                            <i class="fa-solid fa-clock text-purple-500 text-2xl"></i>
+                        </div>
+                        <span class="flex h-3 w-3">
+                            <span
+                                class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-purple-400 opacity-75"
+                            ></span>
+                            <span
+                                class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"
+                            ></span>
+                        </span>
                     </div>
-                    <span class="flex h-3 w-3">
-                        <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-purple-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
-                    </span>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs font-semibold text-purple-400 uppercase">Japan</p>
+                            <p id="jp-time" class="text-3xl font-bold tabular-nums">00:00</p>
+                            <p id="jp-date" class="text-[10px] text-slate-400 font-mono">
+                                Loading...
+                            </p>
+                        </div>
+                        <div class="text-right border-l border-slate-700 pl-4">
+                            <p class="text-xs font-semibold text-purple-400 uppercase">Home</p>
+                            <p id="home-time" class="text-3xl font-bold tabular-nums">00:00</p>
+                            <p id="home-date" class="text-[10px] text-slate-400 font-mono">
+                                Loading...
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-xs font-semibold text-purple-400 uppercase">Japan</p>
-                        <p id="jp-time" class="text-3xl font-bold tabular-nums">00:00</p>
-                        <p id="jp-date" class="text-[10px] text-slate-400 font-mono">Loading...</p>
-                    </div>
-                    <div class="text-right border-l border-slate-700 pl-4">
-                        <p class="text-xs font-semibold text-purple-400 uppercase">Home</p>
-                        <p id="home-time" class="text-3xl font-bold tabular-nums">00:00</p>
-                        <p id="home-date" class="text-[10px] text-slate-400 font-mono">Loading...</p>
-                    </div>
-                </div>
-            </div>
-            
-            <a href="/journal" class="group bg-slate-800 p-8 rounded-3xl border border-slate-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-blue-500/20 p-4 rounded-2xl">
-                        <i class="fa-solid fa-map-location-dot text-blue-500 text-2xl"></i>
-                    </div>
-                    <span class="text-xs font-mono text-slate-500">v1.0</span>
-                </div>
-                <h2 class="text-2xl font-semibold mb-2">Travel Journal</h2>
-                <p class="text-slate-400 text-sm">Interactive GPS map tracking your journey across Japan.</p>
-            </a>
 
-            <a href="/nihongo" class="group bg-slate-800 p-8 rounded-3xl border border-slate-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-orange-500/20 p-4 rounded-2xl">
-                        <i class="fa-solid fa-language text-orange-500 text-2xl"></i>
+                <a
+                    href="/journal"
+                    class="group bg-slate-800 p-8 rounded-3xl border border-slate-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2"
+                >
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-blue-500/20 p-4 rounded-2xl">
+                            <i class="fa-solid fa-map-location-dot text-blue-500 text-2xl"></i>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500">v1.0</span>
                     </div>
-                    <span class="text-xs font-mono text-slate-500">v1.0</span>
-                </div>
-                <h2 class="text-2xl font-semibold mb-2">NihonGo!</h2>
-                <p class="text-slate-400 text-sm">Master essential travel phrases and Kanji flashcards to navigate Japan with confidence.</p>
-            </a>
+                    <h2 class="text-2xl font-semibold mb-2">Travel Journal</h2>
+                    <p class="text-slate-400 text-sm">
+                        Interactive GPS map tracking your journey across Japan.
+                    </p>
+                </a>
 
-            <!--Disabled for now-->
-            <!-- <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 flex flex-col">
+                <a
+                    href="/nihongo"
+                    class="group bg-slate-800 p-8 rounded-3xl border border-slate-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2"
+                >
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-orange-500/20 p-4 rounded-2xl">
+                            <i class="fa-solid fa-language text-orange-500 text-2xl"></i>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500">v1.0</span>
+                    </div>
+                    <h2 class="text-2xl font-semibold mb-2">NihonGo!</h2>
+                    <p class="text-slate-400 text-sm">
+                        Master essential travel phrases and Kanji flashcards to navigate Japan with
+                        confidence.
+                    </p>
+                </a>
+
+                <!--Disabled for now-->
+                <!-- <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 flex flex-col">
                 <div class="flex items-center justify-between mb-4">
                     <div class="bg-green-500/20 p-4 rounded-2xl">
                         <i class="fa-solid fa-yen-sign text-green-500 text-2xl"></i>
@@ -102,20 +126,22 @@
                 </div>
             </div> -->
 
-            <a href="/gallery" class="group bg-slate-800 p-8 rounded-3xl border border-slate-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-yellow-500/20 p-4 rounded-2xl">
-                        <i class="fa-solid fa-image text-yellow-500 text-2xl"></i>
+                <a
+                    href="/gallery"
+                    class="group bg-slate-800 p-8 rounded-3xl border border-slate-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2"
+                >
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-yellow-500/20 p-4 rounded-2xl">
+                            <i class="fa-solid fa-image text-yellow-500 text-2xl"></i>
+                        </div>
                     </div>
-                </div>
-                <h2 class="text-2xl font-semibold mb-2">Photo Gallery</h2>
-                <p class="text-slate-400 text-sm">Browse and manage your travel photos.</p>
-            </a>
-
+                    <h2 class="text-2xl font-semibold mb-2">Photo Gallery</h2>
+                    <p class="text-slate-400 text-sm">Browse and manage your travel photos.</p>
+                </a>
+            </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    </body>
 </html>
