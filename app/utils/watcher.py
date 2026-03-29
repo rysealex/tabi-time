@@ -3,36 +3,37 @@ import os
 import sys
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from exif_parser import extract_trip_data
 
-PHOTO_DIR = os.path.join(os.getcwd(), 'app', 'static', 'photos')
-OUTPUT_JSON = os.path.join(os.getcwd(), 'data', 'points.json')
+# Use environment variables for paths, or default to relative project structure
+PROJECT_ROOT = os.getenv("TABITIME_ROOT", os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+WATCH_DIR = os.path.join(PROJECT_ROOT, "app", "static", "photos")
+JSON_OUTPUT = os.path.join(PROJECT_ROOT, "data", "points.json")
 
 class PhotoHandler(FileSystemEventHandler):
-    def on_created(self, event):
-        if not event.is_directory and event.src_path.lower().endswith(('.jpg', '.jpeg')):
-            print(f"New photo detected: {os.path.basename(event.src_path)}")
-            time.sleep(1) 
-            extract_trip_data(PHOTO_DIR, OUTPUT_JSON)
+    def handle_event(self, event):
+        if event.is_directory:
+            return
+        
+        dest_path = getattr(event, 'dest_path', event.src_path)
+        filename = os.path.basename(dest_path)
 
-    def on_moved(self, event):
-        if event.dest_path.lower().endswith(('.jpg', '.jpeg')):
-            print(f"Photo synced/moved: {os.path.basename(event.dest_path)}")
-            time.sleep(1)
-            extract_trip_data(PHOTO_DIR, OUTPUT_JSON)
+        if filename.startswith('.') or not filename.lower().endswith(('.jpg', '.jpeg', '.heic')):
+            return
+
+        # Settle delay for Syncthing rename events
+        time.sleep(2)
+        extract_trip_data(WATCH_DIR, JSON_OUTPUT)
+
+    def on_created(self, event): self.handle_event(event)
+    def on_moved(self, event): self.handle_event(event)
 
 if __name__ == "__main__":
-    event_handler = PhotoHandler()
     observer = Observer()
-    observer.schedule(event_handler, PHOTO_DIR, recursive=False)
-    
-    print(f"📡 Tabi(旅)Time Watcher Active: Monitoring {PHOTO_DIR}...")
+    observer.schedule(PhotoHandler(), WATCH_DIR, recursive=False)
     observer.start()
-    
     try:
-        while True:
-            time.sleep(1)
+        while True: time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()

@@ -1,101 +1,94 @@
 import os
 import json
+import subprocess
 from PIL import Image
-from PIL.ExifTags import TAGS, GPSTAGS
 from pillow_heif import register_heif_opener
 
-# This allows PILLOW to read .HEIC files just like .JPG
+# Enable HEIC support for Pillow conversion
 register_heif_opener()
 
-def get_decimal_from_dms(dms, ref):
-    degrees = float(dms[0])
-    minutes = float(dms[1]) / 60.0
-    seconds = float(dms[2]) / 3600.0
-    if ref in ['S', 'W']:
-        return -(degrees + minutes + seconds)
-    return degrees + minutes + seconds
-
 def extract_trip_data(photo_dir, output_json):
-    points = []
+    """
+    Scans photo_dir, extracts GPS via ExifTool, converts HEIC to JPG, 
+    and appends new points to the JSON log.
+    """
+    # 1. LOAD EXISTING DATA
+    existing_points = []
+    if os.path.exists(output_json):
+        try:
+            with open(output_json, 'r') as f:
+                existing_points = json.load(f)
+        except Exception:
+            existing_points = []
 
-    # Ensure data directory exists
-    os.makedirs(os.path.dirname(output_json), exist_ok=True)
+    processed_files = {p['img'] for p in existing_points}
+    new_points = []
 
-    # Supported formats
-    valid_extensions = ('.jpg', '.jpeg', '.heic')
+    # 2. SCAN FOR PHOTOS
+    valid_exts = ('.jpg', '.jpeg', '.heic', '.JPG', '.JPEG', '.HEIC')
+    if not os.path.exists(photo_dir):
+        return
+
+    all_files = [f for f in os.listdir(photo_dir) if f.lower().endswith(valid_exts)]
     
-    for filename in os.listdir(photo_dir):
-        if filename.lower().endswith(valid_extensions):
-            path = os.path.join(photo_dir, filename)
-            try:
-                # Handle both JPG and HEIC formats seamlessly
-                if filename.lower().endswith('.heic'):
-                    img = Image.open(path)
-                    # Create a JPG version of the HEIC file for easier handling
-                    jpg_filename = os.path.splitext(filename)[0] + ".jpg"
-                    jpg_path = os.path.join(photo_dir, jpg_filename)
+    for filename in all_files:
+        if filename in processed_files or filename.startswith('.'):
+            continue
+            
+        path = os.path.join(photo_dir, filename)
+        
+        try:
+            # 3. EXTRACT METADATA via ExifTool
+            cmd = ['exiftool', '-j', '-gpslatitude#', '-gpslongitude#', '-gpsaltitude#', '-datetimeoriginal', path]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            data_list = json.loads(result.stdout)
+            if not data_list: continue
+            metadata = data_list[0]
+
+            lat = metadata.get('GPSLatitude')
+            lon = metadata.get('GPSLongitude')
+
+            if lat is None or lon is None:
+                continue
+
+            # 4. HANDLE CONVERSION
+            current_display_name = filename
+            if filename.lower().endswith('.heic'):
+                with Image.open(path) as img:
+                    jpg_name = os.path.splitext(filename)[0] + ".jpg"
+                    jpg_path = os.path.join(photo_dir, jpg_name)
                     img.save(jpg_path, "JPEG", quality=90)
-                    os.remove(path)
-                    # Update path and filename to the new JPG version
-                    filename = jpg_filename
-                    path = jpg_path
-                
-                # Extract EXIF data
-                img = Image.open(path)
-                exif_raw = img._getexif()
-                if not exif_raw:
-                    continue
-                
-                # Create a readable dictionary of all EXIF tags
-                full_exif = {}
-                for tag, value in exif_raw.items():
-                    decoded = TAGS.get(tag, tag)
-                    full_exif[decoded] = value
+                os.remove(path)
+                current_display_name = jpg_name
 
-                # 1. Get the Timestamp (DateTimeOriginal)
-                # Format is usually "YYYY:MM:DD HH:MM:SS"
-                raw_time = full_exif.get("DateTimeOriginal", "Unknown Time")
-                # Clean up the format for the UI (e.g., replace : with / in date)
-                clean_time = raw_time.replace(":", "/", 2) if raw_time != "Unknown Time" else raw_time
+            # 5. FORMAT DATA
+            raw_time = metadata.get("DateTimeOriginal", "Unknown Time")
+            clean_time = raw_time.replace(":", "/", 2) if "Unknown" not in raw_time else raw_time
 
-                # 2. Get GPS info (Latitude, Longitude, Altitude)
-                gps_info = {}
-                gps_data = full_exif.get("GPSInfo")
-                if gps_data:
-                    for t in gps_data:
-                        sub_decoded = GPSTAGS.get(t, t)
-                        gps_info[sub_decoded] = gps_data[t]
+            new_points.append({
+                "lat": float(lat),
+                "lon": float(lon),
+                "alt": float(metadata.get('GPSAltitude', 0)),
+                "time": clean_time,
+                "img": current_display_name
+            })
 
-                if 'GPSLatitude' in gps_info:
-                    lat = get_decimal_from_dms(gps_info['GPSLatitude'], gps_info['GPSLatitudeRef'])
-                    lon = get_decimal_from_dms(gps_info['GPSLongitude'], gps_info['GPSLongitudeRef'])
-                    
-                    # Handle Altitude
-                    alt = 0
-                    if 'GPSAltitude' in gps_info:
-                        alt = float(gps_info['GPSAltitude'])
-                        # If AltitudeRef is 1, the object is below sea level
-                        if gps_info.get('GPSAltitudeRef') == 1:
-                            alt = -alt
+        except Exception as e:
+            print(f"Error on {filename}: {e}")
 
-                    points.append({
-                        "lat": float(lat),
-                        "lon": float(lon),
-                        "alt": alt,
-                        "time": clean_time,
-                        "img": filename
-                    })
-
-            except Exception as e:
-                print(f"Error processing {filename}: {e}")
-
-    # Sort points by time so the line on the map follows your actual path
-    points.sort(key=lambda x: x['time'])
+    # 6. SAVE
+    final_list = existing_points + new_points
+    final_list.sort(key=lambda x: x['time'])
 
     with open(output_json, 'w') as f:
-        json.dump(points, f, indent=4)
-    print(f"Successfully parsed {len(points)} photos to {output_json}")
+        json.dump(final_list, f, indent=4)
 
-# To test: run this script directly
 if __name__ == "__main__":
-    extract_trip_data('app/static/photos', 'data/points.json')
+    # Dynamically find paths relative to this script's location
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    PROJECT_ROOT = os.path.dirname(os.path.dirname(SCRIPT_DIR))
+    
+    PHOTOS = os.path.join(PROJECT_ROOT, "app", "static", "photos")
+    JSON_FILE = os.path.join(PROJECT_ROOT, "data", "points.json")
+    
+    extract_trip_data(PHOTOS, JSON_FILE)

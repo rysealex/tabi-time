@@ -1,15 +1,15 @@
 # Web Framework
 Flask==3.1.3
 
-# Image Processing (GPS Extraction)
+# Image Processing (HEIC to JPG Conversion)
 Pillow==12.1.1
 Pillow-Heif==0.21.0
 
-# Environment Variables & Secrets
+# File System Monitoring (Syncthing Automation)
+watchdog==3.0.0
+
+# Environment Variables
 python-dotenv==1.2.2
 
-# External API Requests (For Currency Conversion)
+# External API Requests
 requests==2.32.3
-
-# Watchdog for Auto-Reloading During Development
-watchdog==3.0.0

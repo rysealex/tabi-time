@@ -1,4 +1,5 @@
 app/static/photos/*
+!app/static/photos/.gitkeep
 data/points.json
 data/phrases.json
 __pycache__/
