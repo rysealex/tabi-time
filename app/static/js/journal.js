@@ -2,10 +2,9 @@
 const darkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; CartoDB',
 });
-const stamenTerrain = L.tileLayer(
-    'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png',
-    { attribution: '&copy; Stadia Maps' }
-);
+const mountainTerrain = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenTopoMap contributors',
+});
 const satellite = L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     { attribution: '&copy; Esri' }
@@ -15,13 +14,13 @@ const satellite = L.tileLayer(
 const map = L.map('map', {
     center: [36.2048, 138.2529],
     zoom: 6,
-    layers: [stamenTerrain],
+    layers: [satellite],
 });
 
 const baseMaps = {
-    "<span class='text-slate-900 font-sans'>Mountain Terrain</span>": stamenTerrain,
-    "<span class='text-slate-900 font-sans'>Dark Protocol</span>": darkMatter,
     "<span class='text-slate-900 font-sans'>Satellite View</span>": satellite,
+    "<span class='text-slate-900 font-sans'>Mountain Terrain</span>": mountainTerrain,
+    "<span class='text-slate-900 font-sans'>Dark Protocol</span>": darkMatter,
 };
 L.control.layers(baseMaps).addTo(map);
 
