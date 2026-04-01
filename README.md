@@ -59,11 +59,10 @@ The core interface serves as a high-level overview of the trip's status. Designe
 
 ### 🍱 NihonGo!
 <p align="center">
-  <img src="docs/screenshots/nihongo_card.png" alt="NihonGo!" width="295" style="vertical-align: top; margin-right: 15px;"/>
+  <img src="docs/screenshots/nihongo_main.png" alt="NihonGo! Main" width="295" style="vertical-align: top; margin-right: 15px;"/>
 </p>
 
-- **Intermediate Focus:** A curated database of Japanese phrases specifically for navigation, dining, and travel logistics.
-- **Contextual Cards:** Provides Kanji, Romaji, and English breakdowns to bridge the gap between textbook and street Japanese.
+(Need to add later.)
 
 ---
 
@@ -83,30 +82,32 @@ The core interface serves as a high-level overview of the trip's status. Designe
 
 ### 🗺️ Travel Journal
 <p align="center">
-  <img src="docs/screenshots/journal_main.png" alt="Travel Journal Main" width="800" style="border-radius: 15px; border: 1px solid #334155;"/>
+  <img src="docs/screenshots/journal_main.png" alt="Travel Journal Satellite View" width="800" style="border-radius: 15px; border: 1px solid #334155;"/>
 </p>
 
-- **Dynamic Topography:** Utilizes **OpenTopoMap** to visualize elevation data, crucial for tracking mountain treks.
+- **Satellite Context:** Utilizes high-resolution **Satellite View** as the primary layer for photorealistic environmental context.
 - **Chronological Trace:** Maps the journey as a connected path, highlighting movement across the Japanese archipelago.
+- **Temporal Filtering:** Supports dynamic date toggling to focus the map visualization exclusively on waypoints and media captured on specific days.
 <p align="center">
   <img src="docs/screenshots/journal_modal.png" alt="Travel Journal Waypoint Modal" width="800" style="border-radius: 15px; border: 1px solid #334155; margin-top: 20px;"/>
 </p>
 
-- **Waypoint Intelligence:** Each coordinate point features a custom popup detailing **Entry ID**, **Captured Time**, **Altitude**, and **GPS Accuracy**. It also includes a high-resolution preview of the media captured at that precise location.
+- **Waypoint Intelligence:** Each coordinate point features a custom popup detailing **Entry ID**, **Captured Time**, **Altitude**, and **GPS Accuracy**, including a preview of the media captured at that location.
 <p align="center">
   <img src="docs/screenshots/journal_distance.png" alt="Travel Journal Haversine Distance" width="800" style="border-radius: 15px; border: 1px solid #334155; margin-top: 20px;"/>
 </p>
 
 - **Haversine Distance Mapping:** Interactive polylines calculate the exact distance between waypoints in both kilometers and miles, providing real-time trip mileage statistics upon hover.
 <p align="center">
-  <img src="docs/screenshots/journal_map2.png" alt="Travel Journal Map Two" width="395" style="border-radius: 10px; margin-right: 5px;"/>
-  <img src="docs/screenshots/journal_map3.png" alt="Travel Journal Map Three" width="395" style="border-radius: 10px;"/>
+  <img src="docs/screenshots/journal_map2.png" alt="Travel Journal Dark Protocol" width="800" style="border-radius: 10px; margin-top: 20px;"/>
 </p>
 
-- **Multi-Layer Switching:** Allows immediate toggling between map types, including **Dark Protocol** (high-contrast navigation) and **Satellite View** (photorealistic context).
-- **Temporal Filtering:** Supports dynamic date toggling to focus the map visualization exclusively on waypoints and media captured on a specific day of the trip.
+- **Dynamic Topography:** Includes an **OpenTopoMap** layer to visualize elevation and terrain data, essential for tracking hiking and mountain treks.
+<p align="center">
+  <img src="docs/screenshots/journal_map3.png" alt="Travel Journal OpenTopoMap" width="800" style="border-radius: 10px; margin-top: 20px;"/>
+</p>
 
----
+- **High-Contrast Navigation:** Features a **Dark Protocol** layer (CartoDB) for a sleek, technical UI that minimizes eye strain.
 
 ### 📸 Photo Gallery
 <p align="center">
@@ -121,6 +122,40 @@ The core interface serves as a high-level overview of the trip's status. Designe
 
 - **HCI Lightbox Engineering:** A custom-built image viewer with Thumb Zone ergonomics, placing critical **Close** and **Save** actions at the bottom of the screen for seamless one-handed mobile navigation.
 - **Metadata Overlays:** Overlays technical EXIF data on every image, providing exact context for **Altitude**, **GPS Coordinates**, and **Timestamp**.
+
+---
+
+## 🏗️ System Architecture & Data Pipeline
+
+**TabiTime** is engineered as a private, distributed system that bridges the gap between mobile hardware and home-based edge servers. The power of the platform lies in its zero-touch automated synchronization and processing engine.
+
+### 1. Data Capture & P2P Synchronization
+The pipeline begins the moment a photo is captured on an iPhone. 
+* **iOS Preparation:** Utilizing the **MobiusSync** app (an iOS wrapper for Syncthing), a peer-to-peer connection is established with the Raspberry Pi. 
+* **The Mesh Network:** To bypass firewalls while traveling in Japan, **Tailscale** (WireGuard) creates a secure, encrypted tunnel between the mobile device and the **Raspberry Pi 5** stationed in the US.
+* **Transmission:** High-resolution HEIC files are beamed across the world directly to the Pi's local storage.
+
+### 2. Event-Driven Watcher Service
+Rather than using a slow, scheduled cron job, TabiTime uses an **event-driven** model to ensure the dashboard updates in real-time.
+* **File Monitoring:** A Python service using the `watchdog` library monitors the landing directory on the Pi.
+* **Atomic Handling:** Because Syncthing creates temporary files during transit, the service is engineered to ignore partial writes and only trigger once the file move is finalized via the `on_moved` event.
+
+### 3. Metadata Extraction & Transformation
+Once a file is detected, the `exif_parser.py` engine takes over:
+* **ExifTool Integration:** The system shells out to a Perl-based **ExifTool** binary. This was a critical engineering choice, as standard Python libraries (like `Pillow`) often strip or fail to read the complex, nested GPS metadata found in Apple's HEIC containers.
+* **Data Normalization:** Coordinates are converted from DMS (Degrees, Minutes, Seconds) to Decimal Degrees and stored in a central `points.json` database.
+* **Web Optimization:** The heavy HEIC files are non-destructively converted to optimized JPGs to ensure sub-second rendering on the web dashboard.
+
+### 4. Global Dashboard Access
+The final layer is a **Flask** web server that provides the user interface.
+* **Client-Side Rendering:** The dashboard pulls the normalized JSON and renders the interactive journey using **Leaflet.js** and **Tailwind CSS**.
+* **Remote Viewing:** Because of the Tailscale mesh, family members can access this local Flask server from their own devices as if it were a public website, while the data remains entirely sovereign on my personal hardware.
+
+---
+
+## 🏁 Prerequisites & Installation
+
+(Need to add later.)
 
 ---
 
