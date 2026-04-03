@@ -59,10 +59,30 @@ The core interface serves as a high-level overview of the trip's status. Designe
 
 ### 🍱 NihonGo!
 <p align="center">
-  <img src="docs/screenshots/nihongo_main.png" alt="NihonGo! Main" width="295" style="vertical-align: top; margin-right: 15px;"/>
+  <img src="docs/screenshots/nihongo_main.png" alt="NihonGo! Main" width="800" style="border-radius: 15px; border: 1px solid #334155; margin-bottom: 20px;"/>
+  <br>
+  <img src="docs/screenshots/nihongo_def.png" alt="NihonGo! Definition Side" width="295" style="border-radius: 15px; border: 1px solid #f97316;"/>
 </p>
 
-(Need to add later.)
+- **JLPT N5 Mastery:** Features an curated database of 115+ high-frequency flashcards specifically targeting the **JLPT N5** exam, covering core Kanji, Grammar Particles, and Essential Verbs.
+- **Interactive 3D Flip:** Utilizes CSS `perspective` and `backface-visibility` to create a realistic 3D card-flip animation, mimicking physical study habits.
+- **Fisher-Yates Shuffle:** Integrated JavaScript logic allows for randomized Deck Shuffling, preventing rote memorization based on card order and ensuring true retention.
+- **Smart Categorization:** A dynamic filtering system allows users to focus on specific vocabulary groups, such as **Time & Numbers**, **Na-Adjectives**, or **Travel Essentials**.
+
+### ✍️ Customizing Your Deck
+The **NihonGo!** engine is entirely data-driven, making it easy to scale as your proficiency grows. To add new cards or customize your study path, simply modify the `static/data/phrases.json` file. 
+
+For my current 2026 trip, I am heavily focused on the **JLPT N5** curriculum, so the deck is pre-loaded with N5 essentials. Each entry follows this simple schema:
+
+```json
+{
+  "id": 116,
+  "category": "Daily Verbs",
+  "kanji": "走る",
+  "romaji": "hashiru",
+  "english": "to run"
+}
+```
 
 ---
 
