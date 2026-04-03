@@ -31,36 +31,28 @@ Beyond personal utility, TabiTime serves as a **Live Spectator Portal**. By shar
 ### 🖥️ Dashboard
 <p align="center">
   <img src="docs/screenshots/dashboard_main.png" alt="TabiTime Dashboard" width="800" style="border-radius: 15px; border: 1px solid #334155;"/>
+  <img src="docs/screenshots/dashboard_mobile.png" alt="TabiTime Dashboard Mobile" width="200" style="border-radius: 15px; border: 1px solid #334155;"/>
 </p>
-The core interface serves as a high-level overview of the trip's status. Designed with a dark-slate aesthetic and vibrant accents, it provides instant access to all sub-modules while maintaining a clean, distraction-free layout.
+
+The core interface serves as a high-level overview of the trip's status. Engineered with **Mobile-First Responsiveness**, the layout utilizes a dynamic Tailwind grid that adapts from a 3-column desktop view to a single-column stacked mobile view, ensuring critical travel data is accessible on the go.
 
 ---
 
-### 🕒 Dual-Zone Clock
+### 🕒 Dual-Zone Clock & 📅 Trip Countdown
 <p align="center">
-  <img src="docs/screenshots/clock_card.png" alt="Dual-Zone Clock" width="295" style="vertical-align: top; margin-right: 15px;"/>
+  <img src="docs/screenshots/clock_card.png" alt="Dual-Zone Clock" width="295" style="vertical-align: top; margin-right: 15px; border-radius: 10px;"/>
+  <img src="docs/screenshots/countdown_card.png" alt="Trip Countdown" width="295" style="vertical-align: top; border-radius: 10px;"/>
 </p>
 
-- **Real-Time Sync:** Displays live time and date for both **Japan (JST)** and **Home (PST)**, critical for tracking time zone differences during travel.
-- **Visual Pulse:** Includes a dynamic CSS ping indicator to confirm the background time-synchronization service is active.
-
----
-
-### 📅 Trip Countdown
-<p align="center">
-  <img src="docs/screenshots/countdown_card.png" alt="Trip Countdown" width="295" style="vertical-align: top;"/>
-</p>
-
-- **Interactive Persistence:** Features a custom modal for users to input their return date.
-- **Client-Side Storage:** Utilizes `localStorage` to persist the return target across browser sessions without backend overhead.
-- **Dynamic Calculation:** Automatically updates the Days Remaining metrics every time the dashboard is accessed.
+- **Real-Time Temporal Sync:** Displays live time and date for both **Japan (JST)** and **Home (PST)** to mitigate jet lag and coordinate home-calls.
+- **Persistent State:** The countdown utilizes `localStorage` to preserve return dates without backend overhead, featuring a touch-optimized modal for date entry.
 
 ---
 
 ### 🍱 NihonGo!
 <p align="center">
   <img src="docs/screenshots/nihongo_main.png" alt="NihonGo! Main" width="800" style="border-radius: 15px; border: 1px solid #334155; margin-bottom: 20px;"/>
-  <br>
+  <img src="docs/screenshots/nihongo_mobile.png" alt="NihonGo! Mobile" width="200" style="border-radius: 15px; border: 1px solid #334155;"/>
   <img src="docs/screenshots/nihongo_def.png" alt="NihonGo! Definition Side" width="295" style="border-radius: 15px; border: 1px solid #f97316;"/>
 </p>
 
@@ -89,7 +81,6 @@ For my current 2026 trip, I am heavily focused on the **JLPT N5** curriculum, so
 ### 💴 Currency Converter
 <p align="center">
   <img src="docs/screenshots/converter_card.png" alt="Currency Converter Main" width="295" style="border-radius: 10px;"/>
-  <br>
   <img src="docs/screenshots/converter_ex1.png" alt="Currency Converter USD to JPY" width="295" style="border-radius: 10px; margin-top: 10px;"/>
   <img src="docs/screenshots/converter_ex2.png" alt="Currency Converter JPY to USD" width="295" style="border-radius: 10px; margin-top: 10px;"/>
 </p>
@@ -103,6 +94,7 @@ For my current 2026 trip, I am heavily focused on the **JLPT N5** curriculum, so
 ### 🗺️ Travel Journal
 <p align="center">
   <img src="docs/screenshots/journal_main.png" alt="Travel Journal Satellite View" width="800" style="border-radius: 15px; border: 1px solid #334155;"/>
+  <img src="docs/screenshots/journal_mobile.png" alt="Travel Journal Mobile" width="200" style="border-radius: 15px; border: 1px solid #334155;"/>
 </p>
 
 - **Satellite Context:** Utilizes high-resolution **Satellite View** as the primary layer for photorealistic environmental context.
@@ -132,6 +124,7 @@ For my current 2026 trip, I am heavily focused on the **JLPT N5** curriculum, so
 ### 📸 Photo Gallery
 <p align="center">
   <img src="docs/screenshots/gallery_main.png" alt="Photo Gallery Main" width="800" style="border-radius: 15px; border: 1px solid #334155;"/>
+  <img src="docs/screenshots/gallery_mobile.png" alt="Photo Gallery Mobile" width="200" style="border-radius: 15px; border: 1px solid #334155;"/>
 </p>
 
 - **Zero-Touch P2P Pipeline:** Displays photosSynced directly from iPhone via the Syncthing/Tailscale pipeline over a WireGuard mesh network.
