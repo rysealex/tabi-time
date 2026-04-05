@@ -56,7 +56,7 @@ The core interface serves as a high-level overview of the trip's status. Enginee
   <img src="docs/screenshots/nihongo_def.png" alt="NihonGo! Definition Side" width="295" style="border-radius: 15px; border: 1px solid #f97316;"/>
 </p>
 
-- **JLPT N5 Mastery:** Features an curated database of 115+ high-frequency flashcards specifically targeting the **JLPT N5** exam, covering core Kanji, Grammar Particles, and Essential Verbs.
+- **JLPT N5 Mastery:** Features an curated database of 400+ high-frequency flashcards specifically targeting the **JLPT N5** exam, covering core Kanji, Grammar Particles, and Essential Verbs.
 - **Interactive 3D Flip:** Utilizes CSS `perspective` and `backface-visibility` to create a realistic 3D card-flip animation, mimicking physical study habits.
 - **Fisher-Yates Shuffle:** Integrated JavaScript logic allows for randomized Deck Shuffling, preventing rote memorization based on card order and ensuring true retention.
 - **Smart Categorization:** A dynamic filtering system allows users to focus on specific vocabulary groups, such as **Time & Numbers**, **Na-Adjectives**, or **Travel Essentials**.
