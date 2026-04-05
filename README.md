@@ -168,7 +168,7 @@ The final layer is a **Flask** web server that provides the user interface.
 
 ## 🏁 Prerequisites & Installation
 
-(Need to add later.)
+Coming Soon!
 
 ---
 
