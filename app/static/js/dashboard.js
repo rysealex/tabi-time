@@ -1,7 +1,86 @@
 // --- 1. TRIP MANAGEMENT LOGIC ---
+let allTrips = [];
+const DEFAULT_CONTEXT_ID = 'tabitime_active_trip_id';
+
+// Hook into DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    loadTrips();
+});
+
+// Load All Trips Data Function
+function loadTrips() {
+    fetch('/api/trips')
+        .then((res) => res.json())
+        .then((trips) => {
+            if (trips.length === 0) return;
+            allTrips = trips;
+            // Initialize select element and active countdown values instantly
+            populateActiveTripDropdown();
+        });
+}
+
+// Populate Active Trip Dropdown Function
+function populateActiveTripDropdown() {
+    const selectMenu = document.getElementById('active-trip-select');
+    if (!selectMenu) return;
+
+    selectMenu.innerHTML = '';
+}
+
+// Add, Edit, Delete Functions
+function addTrip(name, startDate, endDate) {
+    fetch('/api/trips_add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, start_date: startDate, end_date: endDate }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                localStorage.setItem(DEFAULT_CONTEXT_ID, data.trip.id);
+                loadTrips();
+                closeTripModal();
+            }
+        });
+}
+
+function editTrip(name, startDate, endDate) {
+    fetch('/api/trips_edit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, start_date: startDate, end_date: endDate }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                loadTrips();
+                closeTripModal();
+            }
+        });
+}
+
+function deleteTrip(id) {
+    fetch('/api/trips_delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                if (localStorage.getItem(DEFAULT_CONTEXT_ID) === id) {
+                    localStorage.removeItem(DEFAULT_CONTEXT_ID);
+                }
+                loadTrips();
+                closeTripModal();
+            }
+        });
+}
+
 // Modal Toggle Functions
 function openTripModal() {
     document.getElementById('trip-modal').classList.remove('hidden');
+    loadTrips(); // populate all trips
 }
 
 function closeTripModal() {
