@@ -1,4 +1,14 @@
-// --- 1. TIME LOGIC ---
+// --- 1. TRIP MANAGEMENT LOGIC ---
+// Modal Toggle Functions
+function openTripModal() {
+    document.getElementById('trip-modal').classList.remove('hidden');
+}
+
+function closeTripModal() {
+    document.getElementById('trip-modal').classList.add('hidden');
+}
+
+// --- 2. TIME LOGIC ---
 function updateClocks() {
     fetch('/api/time')
         .then((res) => res.json())
@@ -12,10 +22,11 @@ function updateClocks() {
 setInterval(updateClocks, 60000);
 updateClocks();
 
-// --- 2. TRIP COUNTDOWN LOGIC ---
+// --- 3. TRIP COUNTDOWN LOGIC ---
+
 function updateCountdown() {
     // 1. Pull from LocalStorage (Default to a future date if empty)
-    const savedDate = localStorage.getItem('tabitime_return_date') || '2026-04-15';
+    const savedDate = localStorage.getItem('tabitime_return_date') || '2026-05-28';
 
     const target = new Date(savedDate + 'T00:00:00');
     const now = new Date();
@@ -57,7 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCountdown();
 });
 
-// --- 3. CURRENCY LOGIC ---
+// Disabled for now
+// --- 4. CURRENCY LOGIC ---
 let exchangeRate = 150.0; // Default until API loads
 let isUsdToJpy = true;
 
