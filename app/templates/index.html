@@ -30,13 +30,22 @@
                         <div class="bg-pink-500/20 p-4 rounded-2xl">
                             <i class="fa-solid fa-compass text-pink-500 text-2xl"></i>
                         </div>
-                        <button
-                            onclick="openTripModal()"
-                            class="text-slate-500 hover:text-pink-400 transition-colors"
-                            title="Manage Trips Portal"
-                        >
-                            <i class="fa-solid fa-gear text-lg"></i>
-                        </button>
+                        <div class="flex gap-3">
+                            <button
+                                onclick="openAddModal()"
+                                class="text-slate-500 hover:text-pink-400 transition-colors"
+                                title="Add Trip"
+                            >
+                                <i class="fa-solid fa-add text-lg"></i>
+                            </button>
+                            <button
+                                onclick="openTripModal()"
+                                class="text-slate-500 hover:text-pink-400 transition-colors"
+                                title="Manage Trip"
+                            >
+                                <i class="fa-solid fa-gear text-lg"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div>
@@ -47,9 +56,9 @@
                             <select
                                 id="active-trip-select"
                                 onchange="handleTripContextChange(this.value)"
-                                class="w-full bg-slate-900/80 border border-slate-700 rounded-xl py-2 px-4 text-white font-bold text-lg focus:outline-none focus:border-pink-500 appearance-none cursor-pointer"
+                                class="w-full bg-slate-900/80 border border-slate-700 rounded-xl py-2 px-4 text-white font-bold text-lg focus:outline-none focus:border-pink-500 appearance-none cursor-pointer relative z-10"
                             >
-                                <option value="loading">Loading trips...</option>
+                                <option value="loading">Loading Trips...</option>
                             </select>
                             <div
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400"
@@ -60,6 +69,74 @@
                     </div>
                 </div>
 
+                <!-- Add Trip Modal -->
+                <div
+                    id="add-modal"
+                    class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                >
+                    <div
+                        class="bg-slate-800 border border-slate-700 p-8 rounded-3xl w-full max-w-sm shadow-2xl"
+                    >
+                        <h3 class="text-xl font-bold mb-1">Add Trip Portal</h3>
+
+                        <div class="space-y-4 mb-6">
+                            <div>
+                                <label
+                                    class="text-[10px] font-mono uppercase text-pink-400 tracking-widest ml-1"
+                                    >Trip Name</label
+                                >
+                                <input
+                                    type="text"
+                                    id="add-trip-name"
+                                    placeholder="e.g. Winter in Hokkaido"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-pink-500 transition mt-1"
+                                />
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label
+                                        class="text-[10px] font-mono uppercase text-pink-400 tracking-widest ml-1"
+                                        >Start Date</label
+                                    >
+                                    <input
+                                        type="date"
+                                        id="add-trip-start"
+                                        class="w-full bg-slate-900 border border-slate-700 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-pink-500 transition mt-1 text-xs"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        class="text-[10px] font-mono uppercase text-pink-400 tracking-widest ml-1"
+                                        >End Date</label
+                                    >
+                                    <input
+                                        type="date"
+                                        id="add-trip-end"
+                                        class="w-full bg-slate-900 border border-slate-700 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-pink-500 transition mt-1 text-xs"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <button
+                                onclick="addTrip()"
+                                class="w-full py-3 rounded-xl bg-pink-600 hover:bg-pink-500 transition font-bold text-sm"
+                            >
+                                Add Trip
+                            </button>
+                            <button
+                                onclick="closeAddModal()"
+                                class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-950 transition text-sm font-medium text-slate-400"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit/Delete Trip Modal -->
                 <div
                     id="trip-modal"
                     class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -67,16 +144,41 @@
                     <div
                         class="bg-slate-800 border border-slate-700 p-8 rounded-3xl w-full max-w-sm shadow-2xl"
                     >
-                        <h3 class="text-xl font-bold mb-4">Manage Trips Portal</h3>
-                        <input
-                            type="date"
-                            id="date-input"
-                            class="w-full bg-slate-900 border border-slate-700 rounded-xl py-3 px-4 text-white mb-6 focus:outline-none focus:border-red-500"
-                        />
-                        <div class="flex gap-3">
+                        <h3 class="text-xl font-bold mb-1">Edit/Delete Trip Portal</h3>
+
+                        <div
+                            class="bg-slate-900/60 border border-slate-700/50 p-3 rounded-xl mb-6 mt-2"
+                        >
+                            <p class="text-[10px] font-mono uppercase text-pink-400 tracking-wider">
+                                Active Trip
+                            </p>
+                            <p
+                                id="modal-active-trip-display"
+                                class="text-sm font-bold text-white mt-0.5"
+                            >
+                                None Selected
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <button
+                                onclick="editTrip()"
+                                class="w-full py-3 rounded-xl bg-pink-600 hover:bg-pink-500 transition font-bold text-sm"
+                            >
+                                Edit Active Trip
+                            </button>
+                            <button
+                                onclick="deleteTrip()"
+                                class="w-full py-3 rounded-xl bg-pink-600 hover:bg-pink-500 transition font-bold text-sm"
+                            >
+                                Delete Active Trip
+                            </button>
+
+                            <hr class="border-slate-700/60 my-2" />
+
                             <button
                                 onclick="closeTripModal()"
-                                class="flex-1 py-3 rounded-xl bg-slate-700 hover:bg-slate-600 transition"
+                                class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-950 transition text-sm font-medium text-slate-400"
                             >
                                 Cancel
                             </button>
